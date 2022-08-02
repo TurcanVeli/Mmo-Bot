@@ -138,8 +138,8 @@ class RolePLay(commands.Cog):
             "Weapon": { "id": 0, "Name": "Boş"},
             "Kask": {"id": 0,"Name": "Boş"},
             "Body":{"id": 0,"Name": "Boş"},
-            "Foot":{"id": 0, "Name": "Boş"},
-            "Aksesuar":{"id":0, "Name": "Boş"}
+            "Foot":{"id": 0, "Name": "Boş"}
+    
         }
         
         try:

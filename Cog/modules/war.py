@@ -72,7 +72,7 @@ class Player():
         self.skill  = Skill(self.ClassOfUser,self.levelOfUser,self.skillofUSer)
         self.SkillType = self.skill.check_SkillType()
         self.bs = self.skill.BS()
-        atwarData  = {'set' : {"AtWar" : True}}
+        atwarData  = {'$set' : {"AtWar" : True}}
         self.db.User_Information.update_one(FindCondition(self.id),atwarData)
       
 
@@ -97,9 +97,12 @@ class Player():
               
                 if memberDamageDice == "Yok":
                     continue
+                
                 else :
-                    self.DamageBonus += int(roll(memberDamageDice)/4)
-
+                    try: 
+                        self.DamageBonus += int(roll(memberDamageDice)/4)
+                    except Exception as e:
+                        continue
                 
         self.countOfloncamembers = len(loncaMembers)
         if self.countOfloncamembers == 0:

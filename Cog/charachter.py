@@ -441,7 +441,7 @@ class ch(commands.Cog):
         await ctx.respond(f"`{bar}` :stars:\n    {percent}\n{member.mention}")
         
 
-    @slash_command(name = "kuşanlanitemler", description = "Kuşandığın itemlere bak ve armor clşass ve damagene")
+    @slash_command(name = "savaşprofili", description = "Kuşandığın itemlere bak ve armor clşass ve damagene")
     async def inuse(self,ctx):
         #await ctx.defer()
         userid = ctx.author.id
@@ -450,16 +450,19 @@ class ch(commands.Cog):
         kask = ItemUsing["Kask"]
         body = ItemUsing["Body"]
         foot = ItemUsing["Foot"]
-        aksesuar = ItemUsing["Aksesuar"]
-  
+
         itemType = self.bot.db.Items.find_one(FindCondition(weapon["id"]), {"type":1})
-        typeOfItem = itemType['type']
+        if type(itemType) == NoneType:
+            typeOfItem = "Yok"
+        else:
+            typeOfItem = itemType['type']
       
         userBattleState = self.bot.db.userBattle.find_one(FindCondition(userid))
         damage  = userBattleState['Damage']
         ArmorClass = userBattleState['Armor Class']
         hp = userBattleState["Hp"]
         classOFuser = userBattleState['Sınıf']
+        starvation = userBattleState['starvation']
         
   
         UserInfo  = self.bot.db.User_Information.find_one(FindCondition(userid))
@@ -475,8 +478,11 @@ class ch(commands.Cog):
                 timestamp=datetime.utcnow(), 
                 color= discord.Color.random())
         
-        embed.add_field(name = "Üzerindekiler", value = f"Silah: **{weapon['Name']}**\nKafa: **{kask['Name']}**\nGövde: **{body['Name']}**\nAyak: **{foot['Name']}**\nAksesuar: **{aksesuar['Name']}**")
+        embed.add_field(name = "Kullandıkların", value = f"Silah: **{weapon['Name']}**\nKafa: **{kask['Name']}**\nGövde: **{body['Name']}**\nAyak: **{foot['Name']}**")
         embed.add_field(name = "Güçler", value=f"Can: **{hp}**\nDamage Zarı: **{damage} + ({bonus(strenght)} + {proficiency})**\nArmor Class: **{ArmorClass}**")
+        if starvation <= 15:
+            embed.add_field(name = "Zayıflık", value = "Açlığınız %15 in altında hasarın yarısını vurabilirsiniz")
+        
         await ctx.respond(embed=embed, ephemeral = True)
     
     @slash_command(name = "nerdeyim", description = "Rpde hangi kanalda kaldığınızı öğrenin")

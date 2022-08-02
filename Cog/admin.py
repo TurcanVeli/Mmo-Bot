@@ -1,7 +1,9 @@
 
 from types import NoneType
+
 import discord 
 from discord.ext import commands
+
 from Cog.modules.utils import*
 from Cog.modules.processInventory import*
 from discord.commands import Option
@@ -336,13 +338,13 @@ class Moderation(commands.Cog):
     weight: Option(int,"itemin nadirliği. 1-100",min_value=1, max_value=100, Required = True), 
     damagedice: Option(str, "itemin hasar zarı", Required = True),
     cost: Option(int, "İtemin fiyatı", Required = True),
+    rareness: Option(int,"İtemin nadirliği: 1 en nadir 5 sıradan",  min_value = 1, max_value = 5,Required = True)
    
     ):
         await ctx.defer()
     
         while True:
             id = random.randint(1,3000)
-            cursed = False
             item  = self.bot.db.Items.find_one({"_id" : id})
             if type(item) == NoneType:
                 break
@@ -357,7 +359,7 @@ class Moderation(commands.Cog):
             "cost" : cost,
             "damageDice": damagedice,
             "weight" : weight,
-            "cursed" : cursed
+            "rareness": rareness
         }
         try :
             self.bot.db._insertItem(itemdata)
@@ -372,12 +374,13 @@ class Moderation(commands.Cog):
     weight: Option(int, "Nadirlik", Required = True,min_value=1, max_value=100),
     part: Option(str,"Hangi bölge", choices = ["Kask","Body","Foot"],Required = True),
     buffac: Option(int, "Armor classa katkısı?", Required = True),
-    cost: Option(int, "İtemin fiyatı", Required = True)):#item özellikleri : özellik
+    cost: Option(int, "İtemin fiyatı", Required = True),
+    rareness: Option(int,"İtemin nadirliği: 1 en nadir 5 sıradan",  min_value = 1, max_value = 5,Required = True)):#item özellikleri : özellik
         await ctx.defer()
-        cursed = False
+  
         while True:
             id = random.randint(1,3000)
-            cursed = False
+          
             item  = self.bot.db.Items.find_one({"_id" : id})
             if type(item) == NoneType:
                 break
@@ -389,8 +392,8 @@ class Moderation(commands.Cog):
             "part":  part,
             "buffac" : buffac,
             "cost" : cost,
-            "Cursed" : cursed,
-            "weight" : weight#bu weight kısımları kalkabilir
+            "weight" : weight,
+            "rareness" : rareness
         }
         try :
             self.bot.db._insertItem(item)
@@ -407,6 +410,8 @@ class Moderation(commands.Cog):
     name:Option(str, "aksesuarın ismi",Required = True),
     giderilecekaçlık:Option(int,"Azaltacağı açlık miktarını belirler", Required = True),
     cost: Option(int,"Yemeğin fiyatı",min_value = 1,Required = True),
+    weight: Option(int, "Nadirlik", Required = True,min_value=1, max_value=100),
+    rareness: Option(int,"İtemin nadirliği: 1 en nadir 5 sıradan", Required = True, min_value = 1, max_value = 5),
     incenerji: Option(int,"Eğer enerji yükseltecekse bir değer girin", min_value = 0,default = 0,Required = False),
     inchp: Option(int,"Eğer can yükseltecekse bir değer girin",min_value = 0, default = 0,Required = False)):
         await ctx.defer()
@@ -424,7 +429,10 @@ class Moderation(commands.Cog):
             "incstarvation": giderilecekaçlık,
             "incenergy":  incenerji,
             "inchp": inchp,
-            "cost":cost
+            "cost":cost,
+            "rareness" :  rareness,
+            "weight" : weight
+
         }
         self.bot.db._insertItem(item)
         await self.bot.LogChannel.send(f"{self.bot.Voldi.mention} {ctx.author.mention} Tarafından eklendi;\n id : **{id}**\n İsim: **{name}**")
@@ -439,29 +447,7 @@ class Moderation(commands.Cog):
     buffxp: Option(int,"Ac buffı varsa değer gir", Required = False) = 0,
     buffgold: Option(int, "Hp buffı varsa değer gir", Required = True) = 0,
     luckofitem: Option(int,"damage buffı varsa bir değer girin", Required = False) =0):
-        await ctx.defer()
-        
-        while True:
-            id = random.randint(1,3000)
-            item  = self.bot.db.Items.find_one({"_id" : id})
-            if type(item) == NoneType:
-                break
-        
-        item = {
-            "_id" :id,
-            "name": name,
-            "part" : "Aksesuar",
-            "buffxp": buffxp,
-            "buffgold": buffgold,
-            "luckofitem": luckofitem
-        }
-        try :
-            self.bot.db._insertItem(item)
-            
-            await self.bot.LogChannel.send(f"{self.bot.Voldi.mention} {ctx.author.mention} Tarafından eklendi;\n id : **{id}**\n İsim: **{name}**")
-            await ctx.respond("Oluşturuldu")
-        except Exception as e:
-            print(e)
+       pass
 
     @slash_command(name = "envitemekle", description = "kullanıcıya item ekle")
     async def additemTouser(self,

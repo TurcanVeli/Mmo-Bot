@@ -40,7 +40,9 @@ class Battle(commands.Cog):
         await ctx.respond("Başlıyor", ephemeral = True)
       
         User.Load_userInformation()
+        print("Buraya geldi")
         LoncaBuffText = User.checkBuffofLoncaMembers()
+        print("Burayada geldi")
         ControlEnergy = User.checkEnergy() #false olursa yetmiyor
         if ControlEnergy == False:
             await ctx.respond("enerjiniz yetmiyor. Yüklendikten sonra tekrar deneyin", ephemeral = True)
@@ -62,9 +64,9 @@ class Battle(commands.Cog):
                     Attackembed=discord.Embed(title="Savaş", description = Desc, color=0xff0a0a)
                     if Field == False:
                         Attackembed.set_author(name=f"{User.UserName}")
-                        Attackembed.add_field(name=f"{User.UserName} -> **{LoncaBuffText}**",  value = f"-{User.HP}/{User.maxHP}:heart:-\n**Aksiyon**: {UserACtionText}\n**Skill**: {SkillText}", inline=False)
+                        Attackembed.add_field(name=f"{User.UserName} -> **{LoncaBuffText}**",  value = f"{User.HP}/{User.maxHP}:heart:\n**Aksiyon**: {UserACtionText}\n**Skill**: {SkillText}", inline=False)
                         
-                        Attackembed.add_field(name=f"{Monster.monsterName} ->",  value = f"-{Monster.HP}/{Monster.maxHP}:heart:-\n**Aksiyon**: {MonsterACtionText}", inline= False)
+                        Attackembed.add_field(name=f"{Monster.monsterName} ->",  value = f"{Monster.HP}/{Monster.maxHP}:heart:\n**Aksiyon**: {MonsterACtionText}", inline= False)
                     elif Field == True:
                         Attackembed.add_field(name = ResultText[0], value = f"{ResultText[1]}, {ResultText[2]}", inline= False) 
                    
@@ -142,8 +144,8 @@ class Battle(commands.Cog):
                 User.IsWin = True
             if User.HP < 0:
                 User.HP = 0
-            await AttackEmbed.edit(embed = AttackTable())
             await asyncio.sleep(User.warDuration)   
+            await AttackEmbed.edit(embed = AttackTable())
 
         #End of War
         User.energyofUser -= User.settings['War Energy']
@@ -246,8 +248,8 @@ class Battle(commands.Cog):
                 Attackembed=discord.Embed(title="Savaş", description = Desc, color=0xff0a0a)
                 Attackembed.set_author(name=f"{User.UserName}")
                 if Field == False:
-                    Attackembed.add_field(name=f"{User.UserName} Saldırı -> **{UserLoncaBuffText}** ", value = f"-{User.HP}/{User.maxHP}:heart:-\n**Aksiyon**: {UserActionText}\n**Skill**: {UserSkillText}", inline=False)
-                    Attackembed.add_field(name=f"{Enemy.UserName}  Saldırı  -> **{EnemyLoncaBuffText}**",  value = f"-{Enemy.HP}/{Enemy.maxHP}:heart:-\n**Aksiyon**: {EnemyActionText}\n**Skill**: {enemySkillText}", inline= False)
+                    Attackembed.add_field(name=f"{User.UserName} Saldırı -> **{UserLoncaBuffText}** ", value = f"{User.HP}/{User.maxHP}:heart:\n**Aksiyon**: {UserActionText}\n**Skill**: {UserSkillText}", inline=False)
+                    Attackembed.add_field(name=f"{Enemy.UserName}  Saldırı  -> **{EnemyLoncaBuffText}**",  value = f"{Enemy.HP}/{Enemy.maxHP}:heart:\n**Aksiyon**: {EnemyActionText}\n**Skill**: {enemySkillText}", inline= False)
      
                 if Field == True:
                     Attackembed.add_field(name = ResultText[0], value = f"{ResultText[1]}, {ResultText[2]}", inline= False) 
